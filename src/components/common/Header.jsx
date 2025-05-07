@@ -15,7 +15,7 @@ export default function Header() {
     <div>
          <header className="bg-white shadow-md">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-blue-600">ShopifyX</h1>
+          <Link to={"/"} className="text-2xl font-bold text-blue-600">ShopifyX</Link>
           <nav className="space-x-6">
             <Link to={"/"} className="text-gray-700 hover:text-blue-500">Home</Link>
              {auth?.role=="admin" && <Link to={"/admin/all-product"} className="text-gray-700 hover:text-blue-500">Admin</Link>}
