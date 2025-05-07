@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import { adminAddOrCreateProductApi, adminGetProductByIdApi } from '../../utils/apiEndPoints';
 import Loader from '../../components/common/Loader';
+import { baseUrl } from '../../utils/baseUrl';
 
 const CreateOrUpdateProduct = () => {
   const [uploading, setUploading] = useState(false);
@@ -40,7 +41,7 @@ const CreateOrUpdateProduct = () => {
     formData.append('image', file);
     setUploading(true);
     try {
-      const { data } = await axios.post('http://localhost:5500/api/admin/upload-image', formData, {
+      const { data } = await axios.post(`${baseUrl}/api/admin/upload-image`, formData, {
         headers: { 'Content-Type': 'multipart/form-data','Authorization': `Bearer ${getToken()}` },
       });
       toast.success(data?.message||"Successfully upload")
