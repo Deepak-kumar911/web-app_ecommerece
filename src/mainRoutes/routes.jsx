@@ -10,6 +10,7 @@ import CreateOrUpdateProduct from '../pages/admin/createOrUpdateProduct'
 import ProductDetailPage from '../pages/products/ProductDetails'
 import UserRegisterPage from '../pages/user/UserRegisterPage'
 import UserLoginPage from '../pages/user/UserLoginPage'
+import Cartpage from '../pages/user/Cartpage'
  
  export default function MainRouter() {
    return (
@@ -25,6 +26,7 @@ import UserLoginPage from '../pages/user/UserLoginPage'
         <Route path='/product/:id' element={<UserLayout><ProductDetailPage/></UserLayout>}/>
         <Route path='/user/login' element={<UserLayout><UserLoginPage/></UserLayout>}/>
         <Route path='/user/register' element={<UserLayout><UserRegisterPage/></UserLayout>}/>
+        <Route path='/user/cart' element={<UserLayout><Cartpage/></UserLayout>}/>
      </Routes>
    )
  }

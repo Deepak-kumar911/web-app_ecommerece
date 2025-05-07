@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { addProductToCart, removeFromCart, setCart } from '../../redux/reducers/cartSlice';
+import { addProductToCart, removeFromCart, removeProductFromCart } from '../../redux/reducers/cartSlice';
 import { userGetProductByIdApi } from '../../utils/apiEndPoints';
 import { toast } from 'react-toastify';
 import Loader from '../../components/common/Loader';
@@ -10,10 +10,13 @@ import Loader from '../../components/common/Loader';
 const ProductDetailPage = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
-    const { items: cartItems } = useSelector((state) => state.cart);
+    const { items: cartItems,cardId,cartAmt } = useSelector((state) => state.cart);
+    const cart = useSelector((state) => state.cart);
     const auth = useSelector((state) => state.auth);
     const navigate =useNavigate()
-    const cartProduct = cartItems.find((item) => item.id === id);
+    console.log("cart",cartItems);
+    
+    const cartProduct = cartItems.find((item) => item?.productId == id);
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [mainImage, setMainImage] = useState(null);
@@ -47,7 +50,7 @@ const ProductDetailPage = () => {
             return
         }
         if (product) {
-            dispatch(addProductToCart({ ...product, quantity: 1 }));
+            dispatch(addProductToCart({userId:auth?._id,date:new Date(),products:[{_id:product?._id,price:product?.price,title:product?.title,image:product?.image, quantity: 1 }]}));
         }
     };
 
@@ -60,7 +63,8 @@ const ProductDetailPage = () => {
             navigate("/user/login")
             return
         }
-        dispatch(addProductToCart({ ...cartProduct, quantity: cartProduct.quantity + 1 }));
+
+        dispatch(addProductToCart({userId:auth?._id,date:new Date(),products:[{_id:product?._id,price:product?.price,title:product?.title,image:product?.image, quantity: cartProduct?.quantity + 1 }]}));
     };
 
     const handleDecreaseQuantity = () => {
@@ -73,14 +77,19 @@ const ProductDetailPage = () => {
             return
         }
         if (cartProduct.quantity > 1) {
-            dispatch(addProductToCart({ ...cartProduct, quantity: cartProduct.quantity - 1 }));
+            dispatch(addProductToCart({userId:auth?._id,date:new Date(),products:[{_id:product?._id,title:product?.title,image:product?.image,price:product?.price, quantity: cartProduct?.quantity - 1 }]}));
         }
     };
+
+       const handleRemoveItem = (itemId) => {
+          dispatch(removeProductFromCart(itemId));
+        };
+      
 
     if (loading) return <div className="flex justify-center items-center w-full h-screen"><Loader /></div>;
     if (!product) return <div className="flex justify-center items-center w-full h-screen">Product is un-available</div>;
 
-    console.log("auth",auth);
+    console.log("cartProduct",cartProduct,product);
     
 
     return (
@@ -124,6 +133,7 @@ const ProductDetailPage = () => {
                                 </button>
                                 <span className="text-xl">{cartProduct.quantity}</span>
                                 <button
+                                disabled={cartProduct?.quantity==product?.quantity}
                                     onClick={handleIncreaseQuantity}
                                     className="px-4 py-2 bg-green-500 text-white rounded-lg"
                                 >
@@ -131,11 +141,11 @@ const ProductDetailPage = () => {
                                 </button>
                             </div>
                             <button
-                                onClick={() => dispatch(removeFromCart(cartProduct.id))}
-                                className="px-6 py-2 mt-4 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                            >
-                                Remove from Cart
-                            </button>
+                    onClick={() => handleRemoveItem(cartProduct._id)}
+                    className="bg-red-500 text-white my-5 px-4 py-2 rounded-md hover:bg-red-600"
+                  >
+                    Remove
+                  </button>
                         </div>
                     ) : (
                         <button
