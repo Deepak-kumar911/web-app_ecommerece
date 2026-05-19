@@ -33,6 +33,6 @@ jobs:
           key: ${{secrets.SSH_KEY }}
         
           source: "dist"
-          traget: "/var/www/app/frontend"
+          target: "/var/www/app/frontend"
           overwrite: true
           debug: true
