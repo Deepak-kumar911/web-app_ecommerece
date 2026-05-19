@@ -34,3 +34,5 @@ jobs:
         
           source: "dist"
           traget: "/var/www/app/frontend"
+          overwrite: true
+          debug: true
