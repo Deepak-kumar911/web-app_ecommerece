@@ -1,0 +1,36 @@
+name: Deploy Frontend
+
+on:
+  push:
+    braches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/Checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@4
+        with:
+         node-version: 22
+
+      - name: Install Dependencies
+        run: npm run Install
+      
+      - name: build
+        run: npm run build
+
+      - name: Upload Frontend
+        uses: appleboy/scp-actio@master
+  
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.USERNAME }}
+          key: ${{secrets.SSH_KEY }}
+        
+          source: "dist/*"
+          traget: "/var/www/app/frontend/dist"
